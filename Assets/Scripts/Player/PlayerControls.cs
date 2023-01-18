@@ -2,18 +2,23 @@ using UnityEngine;
 
 public class PlayerControls : MonoBehaviour
 {
-    private Rigidbody playerRb;
-    private float playerSpeed = 5.0f;
-    private float playerSprintSpeed = 10.0f;
-    private float playerJumpForce = 100.0f;
-    private bool isOnGround;
+    // Player phusics variables
+    public Rigidbody playerRb;
+    public float playerSpeed = 10.0f;
+    public float playerRotationSpeed = 5.0f;
+    public float playerSprintSpeed = 10.0f;
+    public float playerJumpForce = 100.0f;
+    public bool isOnGround;
+    
+    //player animation variables
+    public Animator playerAnimator;
     
     
 
     void Start()
     {
         playerRb = gameObject.GetComponent<Rigidbody>();
-        
+        playerAnimator = gameObject.GetComponent<Animator>();
     }
 
 
@@ -32,11 +37,13 @@ public class PlayerControls : MonoBehaviour
 
         if (isOnGround)
         {
-            playerRb.AddForce(movement * playerSpeed);
+            playerRb.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(movement), playerRotationSpeed * Time.deltaTime);
+            playerRb.velocity = movement * playerSpeed;
+            playerAnimator.SetFloat("speed", Vector3.ClampMagnitude(movement,1).magnitude);
 
             if (Input.GetAxis("Shift") > 0)
             {
-                playerRb.AddForce(movement * playerSprintSpeed);
+                playerRb.velocity = movement * playerSprintSpeed;
             }
         }
         
