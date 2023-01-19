@@ -95,6 +95,7 @@ public class PlayerControls : MonoBehaviour
 
     private void PlayerKnee()
     {
+        
     }
 
     private void PlayerJump()
@@ -106,21 +107,13 @@ public class PlayerControls : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        UpdateIsOnGroud(collision, true);
+        isOnGround = true;
         playerAnimator.SetBool("isJump", false);
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        UpdateIsOnGroud(collision, false);
-    }
-
-    private void UpdateIsOnGroud(Collision collision, bool value)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isOnGround = value;
-        }
+        isOnGround = false;
     }
     
 }
