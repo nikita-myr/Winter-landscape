@@ -3,19 +3,16 @@ using UnityEngine;
 
 public class PlayerControls : MonoBehaviour
 {
-    // Player phusics variables
+    // Player physics variables
     private Rigidbody playerRb;
+    private float playerRotationSpeed = 30.0f;
     private float playerWalkSpeed = 10.0f;
     private float playerSprintSpeed = 20.0f;
     private float playerCrouchSpeed = 7.0f;
-    private float playerRotationSpeed = 15.0f;
-    private float playerJumpForce = 1.2f;
-    private bool isOnGround;
-    private string currentState;
+    public bool isOnGround;
     
     //player animation variables
     private Animator playerAnimator;
-    
     
 
     void Start()
@@ -23,94 +20,98 @@ public class PlayerControls : MonoBehaviour
         playerRb = gameObject.GetComponent<Rigidbody>();
         playerAnimator = gameObject.GetComponent<Animator>();
     }
-
-
+    
+    
     void Update()
     {
-        PlayerState();
+        //PlayerState();
     }
 
-    private void PlayerState()
+    
+    public void PlayerState(string value)
     {
-        if (isOnGround && Input.GetKey(KeyCode.LeftControl))
+        if (value == "sprint")
         {
-            PlayerCrouching();
-            currentState = "crouching";
-        } else if (isOnGround && Input.GetKey(KeyCode.E))
+            PlayerSprint();
+        } else if (value == "crouch")
+        {
+            PlayerCrouch();
+        }else if (value == "knee")
         {
             PlayerKnee();
-            currentState = "knee";
-            
-        } else if (isOnGround && Input.GetAxis("Jump") > 0)
+        } else if (value == "walk")
         {
-            PlayerJump();
-            currentState = "jump";
-        }
-        else if (isOnGround)
-        {
-            PlayerStand();
-            currentState = "moving";
+            PlayerWalk();
         }
         
-        playerAnimator.SetBool("isCrouch", currentState == "crouching");
-        playerAnimator.SetBool("isKnee", currentState == "knee");
+
+        playerAnimator.SetBool("isCrouch", value == "crouch");
+        playerAnimator.SetBool("isKnee", value == "knee");
     }
+    
     
     private Vector3 PlayerMovement()
     {
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
         
-
-
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-        
-        playerRb.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(movement),
-            playerRotationSpeed * Time.deltaTime);
+
+        if (movement != Vector3.zero)
+        {
+            playerRb.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(movement),
+                playerRotationSpeed * Time.deltaTime);
+        }
         
         return movement;
     }
 
-    private void PlayerStand()
+    
+    private void PlayerWalk()
     {
         var movement = PlayerMovement();
         playerRb.velocity = movement * playerWalkSpeed;
 
         playerAnimator.SetFloat("moveSpeed", Vector3.ClampMagnitude(movement,1).magnitude / 2);
-
-        if (Input.GetAxis("Shift") > 0)
-        {
-            playerRb.velocity = movement * playerSprintSpeed;
-            playerAnimator.SetFloat("moveSpeed", Vector3.ClampMagnitude(movement,1).magnitude);
-        }
     }
 
-    private void PlayerCrouching()
+    private void PlayerSprint()
     {
+        var movement = PlayerMovement();
+        playerRb.velocity = movement * playerSprintSpeed;
+        
+        playerAnimator.SetFloat("moveSpeed", Vector3.ClampMagnitude(movement,1).magnitude);
+    }
+
+    
+    private void PlayerCrouch()
+    {
+        
         var movement = PlayerMovement();
 
         playerRb.velocity = movement * playerCrouchSpeed;
+        playerAnimator.SetBool("isCrouch", true);
         playerAnimator.SetFloat("crouchSpeed", Vector3.ClampMagnitude(movement,1).magnitude);
     }
 
+    
     private void PlayerKnee()
     {
-        
+        playerAnimator.SetBool("isKnee", true);
     }
 
-    private void PlayerJump()
+    private void PlayerCrafting(bool value)
     {
-        var movement = PlayerMovement();
-        playerRb.AddForce(Vector3.up * playerJumpForce, ForceMode.Impulse);
-        playerAnimator.SetBool("isJump", true);
+        playerAnimator.SetBool("isCraft", value);
     }
 
+    
     private void OnCollisionEnter(Collision collision)
     {
         isOnGround = true;
-        playerAnimator.SetBool("isJump", false);
     }
 
+    
     private void OnCollisionExit(Collision collision)
     {
         isOnGround = false;
