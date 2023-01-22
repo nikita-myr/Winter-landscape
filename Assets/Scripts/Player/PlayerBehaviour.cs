@@ -1,12 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerBehaviour : MonoBehaviour
 {
     private bool canUseStamina = true;
     private PlayerControls _playerControls;
-    private Coroutine staminaCountdown;
 
     void Start()
     {
@@ -44,6 +42,7 @@ public class PlayerBehaviour : MonoBehaviour
         }
     }
 
+    // Health system
     private void PlayerTakeDmg(int takenDmg)
     {
         GameManager.gameManager._playerHealth.DamageUnit(takenDmg);
@@ -54,6 +53,7 @@ public class PlayerBehaviour : MonoBehaviour
         GameManager.gameManager._playerHealth.HealUnit(heal);
     } 
     
+    // Stamina system
     private void PlayerUseStamina(float staminaAmount)
     {
         if (GameManager.gameManager._playerStamina.Stamina > 0)
@@ -62,7 +62,7 @@ public class PlayerBehaviour : MonoBehaviour
         } else if (GameManager.gameManager._playerStamina.Stamina < 0)
         {
             canUseStamina = false;
-            StartCoroutine(StaminaCoutdown(3)); ;
+            StartCoroutine(StaminaCoutdown(3));
         }
     }
 
@@ -71,11 +71,27 @@ public class PlayerBehaviour : MonoBehaviour
         GameManager.gameManager._playerStamina.RegenStamina();
     }
 
-
     private IEnumerator StaminaCoutdown(int value)
     {
         yield return new WaitForSeconds(value);
         canUseStamina = true;
+    }
+    
+    // Hunger system
+    private void PlayerHunger(float hunger, float thirst)
+    {
+        GameManager.gameManager._playerHunger.UseHunger(hunger);
+        GameManager.gameManager._playerHunger.UseThirst(thirst);
+    }
+
+    private void PlayerRegenHunger(float amount)
+    {
+        GameManager.gameManager._playerHunger.RegenHunger(amount);
+    }
+
+    private void PlayerRegenThirst(float amount)
+    {
+        GameManager.gameManager._playerHunger.RegenThirst(amount);
     }
     
 }

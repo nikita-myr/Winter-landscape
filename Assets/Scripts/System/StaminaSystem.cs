@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class StaminaSystem
@@ -58,7 +57,7 @@ public class StaminaSystem
     }
     
     
-    //Constructor
+    // Constructor
     public StaminaSystem(float stamina, float maxStamina, float staminaRegenSpeed, bool pauseStaminaRegen)
     {
         _currentStamina = stamina;
