@@ -4,11 +4,12 @@ using UnityEngine;
 public class PlayerControls : MonoBehaviour
 {
     // Player physics variables
-    private Transform cam;
+    private Transform _camera;
     private Rigidbody playerRb;
     //private float playerRotationSpeed = 30.0f;
-    private float playerSmoothRotationTime = 0.1f;
+    private float playerSmoothRotationTime = 0.05f;
     private float playerSmoothTurnVelocity;
+    
     private float playerWalkSpeed = 10.0f;
     private float playerSprintSpeed = 20.0f;
     private float playerCrouchSpeed = 7.0f;
@@ -21,7 +22,7 @@ public class PlayerControls : MonoBehaviour
     void Start()
     {
         playerRb = gameObject.GetComponent<Rigidbody>();
-        cam = UnityEngine.Camera.main.transform;
+        _camera = UnityEngine.Camera.main.transform;
         playerAnimator = gameObject.GetComponent<Animator>();
     }
     
@@ -30,25 +31,33 @@ public class PlayerControls : MonoBehaviour
         //PlayerState();
     }
     
-    public void PlayerState(string value)
+    public enum State
     {
-        if (value == "sprint")
+        Walk,
+        Sprint,
+        Crouch,
+        Knee
+    }
+    
+    public void PlayerState(State value)
+    {
+        if (value == State.Sprint)
         {
             PlayerSprint();
-        } else if (value == "crouch")
+        } else if (value == State.Crouch)
         {
             PlayerCrouch();
-        }else if (value == "knee")
+        }else if (value == State.Knee)
         {
             PlayerKnee();
-        } else if (value == "walk")
+        } else if (value == State.Walk)
         {
             PlayerWalk();
         }
         
 
-        playerAnimator.SetBool("isCrouch", value == "crouch");
-        playerAnimator.SetBool("isKnee", value == "knee");
+        playerAnimator.SetBool("isCrouch", value == State.Crouch);
+        playerAnimator.SetBool("isKnee", value == State.Knee);
     }
     
     private Vector3 PlayerMovement()
@@ -58,7 +67,7 @@ public class PlayerControls : MonoBehaviour
         
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical).normalized;
         
-        float targetAngle = Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+        float targetAngle = Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg + _camera.eulerAngles.y;
         float angel = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, 
             ref playerSmoothTurnVelocity, playerSmoothRotationTime);
         
@@ -67,9 +76,7 @@ public class PlayerControls : MonoBehaviour
         {
             Vector3 moveDir = Quaternion.Euler(.0f, targetAngle, .0f) * Vector3.forward;
             playerRb.rotation = Quaternion.Euler(.0f, angel, .0f);
-
-            //playerRb.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(movement),
-            //  playerRotationSpeed * Time.deltaTime);
+            
             return moveDir.normalized;
         }
 

@@ -5,6 +5,8 @@ public class PlayerBehaviour : MonoBehaviour
 {
     private bool canUseStamina = true;
     private PlayerControls _playerControls;
+    private PlayerControls.State _currentState;
+    public GameObject inventoryCanvas;
 
     void Start()
     {
@@ -22,22 +24,26 @@ public class PlayerBehaviour : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.LeftShift) && canUseStamina)
             {
+                _currentState = PlayerControls.State.Sprint;
+                _playerControls.PlayerState(_currentState);
                 PlayerUseStamina(10.0f);
-                _playerControls.PlayerState("sprint");
-
             } else if (Input.GetKey(KeyCode.LeftControl))
             {
+                _currentState = PlayerControls.State.Crouch;
+                _playerControls.PlayerState(_currentState);
                 PlayerRegenStamina();
-                _playerControls.PlayerState("crouch");
             } else if (Input.GetKey(KeyCode.E))
             {
+                _currentState = PlayerControls.State.Knee;
+                _playerControls.PlayerState(_currentState);
+                inventoryCanvas.SetActive(_currentState == PlayerControls.State.Knee);
                 PlayerRegenStamina();
-                _playerControls.PlayerState("knee");
-            }
+            } 
             else
             {
+                _currentState = PlayerControls.State.Walk;
+                _playerControls.PlayerState(_currentState);
                 PlayerRegenStamina();
-                _playerControls.PlayerState("walk");
             }
         }
     }
