@@ -1,12 +1,18 @@
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InventoryManager : MonoBehaviour
 {
+    public static InventoryManager instance;
+    
     public InventorySlot[] inventorySlots;
     public GameObject inventoryItemPrefab;
     
-    
+    private void Awake()
+    {
+        instance = this;
+    }
+
     public bool AddItem(Item item)
     {
         //Check for the same item in slots
@@ -17,7 +23,7 @@ public class InventoryManager : MonoBehaviour
             if (itemInSlot != null && itemInSlot.item == item && item.isStackable && itemInSlot.count < item.stackSize)
             {
                 itemInSlot.count++;
-                itemInSlot.RefreshCount();
+                itemInSlot.RefresTexts();
                 return true;
             }
         }
@@ -33,6 +39,8 @@ public class InventoryManager : MonoBehaviour
                 return true;
             }
         }
+        
+        // Make game can append new slots and place new item in this 
         return false;
     }
 
@@ -43,7 +51,7 @@ public class InventoryManager : MonoBehaviour
             movedItem.item.stackSize > itemInSlot.count)
         {
             itemInSlot.count += movedItem.count;
-            itemInSlot.RefreshCount();
+            itemInSlot.RefresTexts();
             return true;
         }
         return false;
