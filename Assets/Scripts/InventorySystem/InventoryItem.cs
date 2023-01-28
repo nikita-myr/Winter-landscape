@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -9,10 +10,15 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public Image image;
     public Text countText;
     
-    [HideInInspector] public Item item;
+    public Item item;
     [HideInInspector] public Transform parentAfterDrag;
     [HideInInspector] public int count = 1;
-    
+
+    private void Awake()
+    {
+        InitialiseItem(item);
+    }
+
 
     public void InitialiseItem(Item newItem)
     {
@@ -44,7 +50,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         image.raycastTarget = true;
         transform.SetParent(parentAfterDrag);
+        
     }
     
-
 }

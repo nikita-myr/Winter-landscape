@@ -15,7 +15,7 @@ public class PlayerBehaviour : MonoBehaviour
     void Update()
     {
         PlayerController();
-        Debug.Log(GameManager.gameManager._playerStamina.Stamina);
+        //Debug.Log(GameManager.gameManager._playerStamina.Stamina);
     }
 
     private void PlayerController()
@@ -36,7 +36,6 @@ public class PlayerBehaviour : MonoBehaviour
             {
                 _currentState = PlayerControls.State.Knee;
                 _playerControls.PlayerState(_currentState);
-                inventoryCanvas.SetActive(_currentState == PlayerControls.State.Knee);
                 PlayerRegenStamina();
             } 
             else
@@ -45,6 +44,8 @@ public class PlayerBehaviour : MonoBehaviour
                 _playerControls.PlayerState(_currentState);
                 PlayerRegenStamina();
             }
+            
+            inventoryCanvas.SetActive(_currentState == PlayerControls.State.Knee);
         }
     }
 

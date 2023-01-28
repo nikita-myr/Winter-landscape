@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - Inventory
+  - InventoryManager
   layers:
   - Default
   - TransparentFX
