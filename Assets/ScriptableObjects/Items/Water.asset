@@ -17,5 +17,5 @@ MonoBehaviour:
   Type: 2
   Condition: 100
   Weight: 0.5
-  MaxStackSize: 1
+  MaxStackSize: 3
   Description: This is a bottle of water that you probably can drink

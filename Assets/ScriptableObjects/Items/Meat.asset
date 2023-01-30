@@ -17,5 +17,5 @@ MonoBehaviour:
   Type: 1
   Condition: 100
   Weight: 1
-  MaxStackSize: 1
+  MaxStackSize: 5
   Description: This is a peace of meat that you probably can eat
