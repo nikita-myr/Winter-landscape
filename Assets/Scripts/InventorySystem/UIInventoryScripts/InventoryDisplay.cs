@@ -8,7 +8,7 @@ public abstract class InventoryDisplay : MonoBehaviour
     [SerializeField] private MouseItemData mouseInventoryItem;
     
     protected InventorySystem inventorySystem;
-    protected Dictionary<InventorySlot_UI, InventorySlot> slotDictionary;
+    protected Dictionary<InventorySlot_UI, InventorySlot> slotDictionary; // Pair the ui slots with the system slots.
     
     public InventorySystem InventorySystem => inventorySystem;
     public Dictionary<InventorySlot_UI, InventorySlot> SlotDictionary => slotDictionary;
@@ -18,7 +18,7 @@ public abstract class InventoryDisplay : MonoBehaviour
         
     }
 
-    public abstract void AssignSlot(InventorySystem inventoryToDisplay);
+    public abstract void AssignSlot(InventorySystem inventoryToDisplay); // Implemented in child classes.
 
     protected virtual void UpdateSlots(InventorySlot updatedSlot)
     {
@@ -71,7 +71,7 @@ public abstract class InventoryDisplay : MonoBehaviour
             bool isSameItems = clickedUISlot.AssignedInventorySlot.ItemData == mouseInventoryItem.AssignedInventorySlot.ItemData;
             
             if (isSameItems && 
-                clickedUISlot.AssignedInventorySlot.RoomLeftInStack(mouseInventoryItem.AssignedInventorySlot.StackSize))
+                clickedUISlot.AssignedInventorySlot.EnoughRoomLeftInStack(mouseInventoryItem.AssignedInventorySlot.StackSize))
             {
                 clickedUISlot.AssignedInventorySlot.AssignItem(mouseInventoryItem.AssignedInventorySlot);
                 clickedUISlot.UpdateUISlot();
@@ -79,7 +79,7 @@ public abstract class InventoryDisplay : MonoBehaviour
                 mouseInventoryItem.ClearSlot();
                 return;
             }else if (isSameItems && 
-                      !clickedUISlot.AssignedInventorySlot.RoomLeftInStack(mouseInventoryItem.AssignedInventorySlot.StackSize, 
+                      !clickedUISlot.AssignedInventorySlot.EnoughRoomLeftInStack(mouseInventoryItem.AssignedInventorySlot.StackSize, 
                           out int leftInStack))
             {
                 // Stack is full, SWAP items

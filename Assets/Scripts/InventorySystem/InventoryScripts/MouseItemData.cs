@@ -28,13 +28,14 @@ public class MouseItemData : MonoBehaviour
 
     private void Update()
     {
-        if (AssignedInventorySlot.ItemData != null)
+        if (AssignedInventorySlot.ItemData != null) // If has an item, follow the mouse position.
         {
             transform.position = Mouse.current.position.ReadValue();
 
             if (Mouse.current.leftButton.wasPressedThisFrame && !IsPointerOverUIObject()) //Delete item if out of Inventory GUI
             {
                 ClearSlot();
+                // TODO: drop the item on the ground.
             }
         }
     }

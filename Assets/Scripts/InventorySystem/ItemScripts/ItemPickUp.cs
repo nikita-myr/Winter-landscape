@@ -7,6 +7,8 @@ public class ItemPickUp : MonoBehaviour
     public ItemData itemData;
 
     private SphereCollider myCollider;
+    
+    // TODO: make item pickup system on by a collider. I need made it by an interact by button like a "Press F to pick up".
 
     private void Awake()
     {

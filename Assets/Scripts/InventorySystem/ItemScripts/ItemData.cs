@@ -1,5 +1,9 @@
 using UnityEngine;
 
+/// <summary>
+/// This is a scriptable object that defines what an item is in game.
+/// It could be inherited from to have branches version of items, for example: equipment, food.
+/// </summary>
 
 [CreateAssetMenu(menuName = "Inventory system/Item")]
 public class ItemData : ScriptableObject
