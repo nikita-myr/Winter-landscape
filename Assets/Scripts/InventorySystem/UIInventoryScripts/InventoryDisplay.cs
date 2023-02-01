@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,6 +13,8 @@ public abstract class InventoryDisplay : MonoBehaviour
     
     public InventorySystem InventorySystem => inventorySystem;
     public Dictionary<InventorySlot_UI, InventorySlot> SlotDictionary => slotDictionary;
+
+    public event EventHandler<ItemData> OnSlotClicked;
 
     protected virtual void Start()
     {
@@ -34,9 +37,25 @@ public abstract class InventoryDisplay : MonoBehaviour
     public void SlotClicked(InventorySlot_UI clickedUISlot)
     {
         bool isTABPressed = Keyboard.current.tabKey.isPressed;
+        bool isIPressed = Keyboard.current.iKey.isPressed;
+        
+        // If slot is not clear and mouse slot is clear and <I> is pressed, inspect the item.
+        if (isIPressed && clickedUISlot.AssignedInventorySlot.ItemData != null &&
+            mouseInventoryItem.AssignedInventorySlot.ItemData == null)
+        {
+            OnSlotClicked.Invoke(this, clickedUISlot.AssignedInventorySlot.ItemData);
+            return;
+        }
+
+        if (isIPressed && clickedUISlot.AssignedInventorySlot.ItemData == null &
+            mouseInventoryItem.AssignedInventorySlot.ItemData == null)
+        {
+            OnSlotClicked.Invoke(this, clickedUISlot.AssignedInventorySlot.ItemData);
+            return;
+        }
         
         // If slot is not clear
-        if (clickedUISlot.AssignedInventorySlot.ItemData != null && mouseInventoryItem.AssignedInventorySlot.ItemData == null)
+        else if (clickedUISlot.AssignedInventorySlot.ItemData != null && mouseInventoryItem.AssignedInventorySlot.ItemData == null)
         {
             // Split stack if player hold <TAB> key
             if (isTABPressed && clickedUISlot.AssignedInventorySlot.SplitStack(out InventorySlot halfStackSlot))
@@ -53,6 +72,8 @@ public abstract class InventoryDisplay : MonoBehaviour
                 clickedUISlot.ClearSlot();
                 return;
             }
+            
+            
         }
         
         // If slot is clear, put item from mouse

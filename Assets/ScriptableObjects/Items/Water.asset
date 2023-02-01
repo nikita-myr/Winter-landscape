@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DisplayName: Water
   Image: {fileID: 21300000, guid: 02800fb9cff14da47a04572790384d8b, type: 3}
+  itemPrefab: {fileID: 7283434444425969674, guid: 8417a685011a14724a4efbaef4465293, type: 3}
   Type: 2
   Condition: 100
   Weight: 0.5

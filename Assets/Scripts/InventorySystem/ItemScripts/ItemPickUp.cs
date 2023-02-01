@@ -1,32 +1,37 @@
 using UnityEngine;
+using UnityEngine.Events;
 
-[RequireComponent(typeof(SphereCollider))]
-public class ItemPickUp : MonoBehaviour
+[RequireComponent(typeof(MeshCollider))]
+public class ItemPickUp : MonoBehaviour, IInteractable
 {
-    public float pickUpRadius = 15.0f;
     public ItemData itemData;
-
-    private SphereCollider myCollider;
+    public InventoryHolder inventoryHolder;
+    [SerializeField] private string _prompt; 
+    public string InteractionPrompt => _prompt;
+    public UnityAction<IInteractable> OnIterationComplite { get; set; }
     
-    // TODO: make item pickup system on by a collider. I need made it by an interact by button like a "Press F to pick up".
-
-    private void Awake()
+    // TODO: make item pickup system on by a raycast from screen. I need made it by an interact by button like a "Press F to pick up".
+    
+    public void Interact(Interactor interactor, out bool interactSuccesfull)
     {
-        myCollider = GetComponent<SphereCollider>();
-        myCollider.isTrigger = true;
-        myCollider.radius = pickUpRadius;
-    }
+        var inventoryHolder = GameObject.FindWithTag("Player").GetComponentInChildren<InventoryHolder>();
 
-    private void OnTriggerEnter(Collider other)
-    {
-        var inventory = other.transform.GetComponent<InventoryHolder>();
-        
-        if (!inventory) return;
-
-        if (inventory.InventorySystem.AddToInventory(itemData, 1))
+        if (!inventoryHolder)
         {
-            Destroy(this.gameObject);
+            interactSuccesfull = false;
+        }
+        
+        if (inventoryHolder.InventorySystem.AddToInventory(itemData, 1))
+        {
+            Destroy(gameObject);
+            interactSuccesfull = true;
         }
 
+        interactSuccesfull = false;
+    }
+
+    public void EndInteraction()
+    {
+        
     }
 }

@@ -7,11 +7,16 @@ using Random = UnityEngine.Random;
 
 public class InventoryUIController : MonoBehaviour
 {
+    public GameObject parentDynamicInventoryPanel;
     public DynamicInventoryDisplay inventoryPanel;
+
+    public GameObject paretnPreviewInventoryItem;
+    public PreviewInentoryItem previewInventoryItem;
 
     private void Awake()
     {
-        inventoryPanel.gameObject.SetActive(false);
+        paretnPreviewInventoryItem.gameObject.SetActive(true);
+        parentDynamicInventoryPanel.gameObject.SetActive(false);
     }
 
     private void OnEnable()
@@ -26,14 +31,19 @@ public class InventoryUIController : MonoBehaviour
 
     void Update()
     {
-        if(inventoryPanel.gameObject.activeInHierarchy && Keyboard.current.escapeKey.wasPressedThisFrame) 
-            inventoryPanel.gameObject.SetActive(false);
+        if (inventoryPanel.gameObject.activeInHierarchy && Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            parentDynamicInventoryPanel.gameObject.SetActive(false);
+            paretnPreviewInventoryItem.gameObject.SetActive(true);
+        }
+            
 
     }
 
     void DisplayInventory(InventorySystem invToDisplay)
     {
-        inventoryPanel.gameObject.SetActive(true);
+        parentDynamicInventoryPanel.gameObject.SetActive(true);
+        paretnPreviewInventoryItem.gameObject.SetActive(false);
         inventoryPanel.RefreshDynamicInventory(invToDisplay);
     }
 }

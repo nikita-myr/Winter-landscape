@@ -10,6 +10,7 @@ public class ItemData : ScriptableObject
 {
     public string DisplayName;
     public Sprite Image;
+    public GameObject itemPrefab;
     
     [SerializeField]
     public ItemType Type;
@@ -21,6 +22,7 @@ public class ItemData : ScriptableObject
     
     [TextArea(4,4)]
     public string Description;
+    
 }
 
 public enum ItemType
